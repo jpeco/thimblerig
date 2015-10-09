@@ -5,26 +5,25 @@ import java.awt.event.*;
 
 public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
-	
-	int mouseX=0, mouseY=0;				// координаты курсора мыши
-	int x1=125, x2=235, x3=345, ballX, r = 30;	// координаты анимированных эл-тов игры
-	int y1=110, y2=110, y3=110, ballY=200;		// координаты анимированных эл-тов игры
-	int delta1=12, delta2=7, delta3=15;		// коэффициенты скорости изменения координат наперстков
-	int phase=1;					// указатель фазы игры
+
+	int mouseX=0, mouseY=0;				// mouse cursor coordinates
+	int x1=125, x2=235, x3=345, ballX, r = 30;	// animated elements coordinates and base-size
+	int y1=110, y2=110, y3=110, ballY=200;		// animated elements coordinates
+	int delta1=12, delta2=7, delta3=15;		// thimbles rate of change of coordinates
+	int phase=1;					// marker of actual phase
 	int count=0;
-	int thimbleFact, choice;    			// случайная переменная, переменная выбора игрока
+	int thimbleFact, choice;    			// random variable, variable of gamer's choice
 
 	Random rand = new Random();
     
 	public void init() {
-		// класс регистрируется в кач-ве приемника событий от мыши
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setSize(530,250);
-		thimbleFact=rand.nextInt(3);		// закидывание шарика под наперсток
+		thimbleFact=rand.nextInt(3);		// random throwing the ball
 	}
 	
-	// события, наступ. при отпускании кнопки мыши
+	// events when released mouse button
 	public void mouseReleased(MouseEvent me) {
 		mouseX=me.getX();
 		mouseY=me.getY();
@@ -43,7 +42,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
 		mouseX=me.getX();
 		mouseY=me.getY();
 		
-		// подсказки названия элементов игроку
+		// tips of the game elements
 		if(phase==1 & mouseX>240 & mouseX<290 & mouseY>30 & mouseY<55) {
 			showStatus("The \"Start\" button"); }
 		else showStatus("");
@@ -62,7 +61,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
 	public void mouseExited(MouseEvent me) {}
 	public void mousePressed(MouseEvent me) {}
 	
-	public void starts(Graphics g) {			// phase=1, предстартовая прорисовка
+	public void starts(Graphics g) {		// phase=1
 		g.setColor(Color.WHITE);
 		g.fillRect(240, 30, 50, 25);
 		g.setColor(Color.BLACK);
@@ -74,7 +73,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
         g.fillOval(x3, y3, r*2, r*2);
 	}
 	
-	public void beforeMix(Graphics g) {			// phase=2, старт
+	public void beforeMix(Graphics g) {		// phase=2
 		g.setColor(Color.WHITE);
 		g.fillRect(242, 34, 49, 18);
 		g.setColor(Color.BLACK);
@@ -90,7 +89,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
         repaint();
 	}
 	
-	public void moveBall(Graphics g) {			// phase=3, забрасывание шарика
+	public void moveBall(Graphics g) {		// phase=3
 		g.setColor(Color.WHITE);
 		g.fillRect(242, 34, 49, 18);
 		g.setColor(Color.BLACK);
@@ -107,7 +106,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
         if(ballY==125) { phase=4; }
 	}
 	
-	// анимация шарика
+	// ball animation
 	public void animateBall(Graphics g) {		// in phase=3
 		try { Thread.sleep(10); }
 		 catch(InterruptedException e) {}
@@ -115,7 +114,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
     	repaint(10);
     }
 	
-	public void mix(Graphics g) {				// phase=4, перемешивание наперстков
+	public void mix(Graphics g) {			// phase=4
 		g.setColor(Color.WHITE);
 		g.fillRect(211, 34, 120, 18);
 		g.setColor(Color.BLACK);
@@ -127,16 +126,16 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
 		animateThimbs(g);
 	}
 	
-	// анимация наперстков
+	// thimbles animation
 	public void animateThimbs(Graphics g) {		// in phase=4
 		Dimension bounds = getSize();
 		count++;
 		if ((x1 - r*2 + delta1 < 30) |
-					(x1 + r*2 + delta1 > bounds.width-70)) delta1 = -delta1;
+			(x1 + r*2 + delta1 > bounds.width-70)) delta1 = -delta1;
 		if ((x2 - r*2 + delta2 < 30) |
-					(x2 + r*2 + delta2 > bounds.width-70)) delta2 = -delta2;
+			(x2 + r*2 + delta2 > bounds.width-70)) delta2 = -delta2;
 		if ((x3 - r*2 + delta3 < 30) |
-					(x3 + r*2 + delta3 > bounds.width-70)) delta3 = -delta3;
+			(x3 + r*2 + delta3 > bounds.width-70)) delta3 = -delta3;
 			 
 		x1 += delta1; x2 += delta2; x3 += delta3;
 		try { Thread.sleep(40); }
@@ -145,7 +144,7 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
 		repaint(30);
 		}
 
-	public void afterMix(Graphics g) {			// phase=5, момент выбора игроком
+	public void afterMix(Graphics g) {		// phase=5
 		g.setColor(Color.WHITE);
 		g.fillRect(197, 34, 139, 18);
 		g.setColor(Color.BLACK);
@@ -156,11 +155,11 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
         g.fillOval(x2, y2, r*2, r*2);
         g.fillOval(x3, y3, r*2, r*2);
         
-        thimbleFact=rand.nextInt(3);			// положение шарика под наперстком
-        // showStatus("Thimble: " + (thimbleFact+1));	// ---------подсказка
+        thimbleFact=rand.nextInt(3);			// ball position ander the thimble
+        // showStatus("Thimble: " + (thimbleFact+1));	// ---------clue
 	}
 	
-	public void result(Graphics g) {			// phase=6, результаты выбора
+	public void result(Graphics g) {		// phase=6
 		g.setColor(Color.WHITE);
 		g.fillRect(240, 30, 50, 25);
 		g.setColor(Color.BLACK);
@@ -195,12 +194,12 @@ public class ThimblerigV2 extends Applet implements MouseMotionListener, MouseLi
 	public void paint(Graphics g) {
 		//g.drawImage(getImage(getCodeBase(), "back.jpg"), 0, 0, this);
 		switch(phase){
-		case 1: starts(g); break;				// фаза phase=1
-		case 2: beforeMix(g); break;			// фаза phase=2
-		case 3: moveBall(g); break;				// фаза phase=3
-		case 4: mix(g); break;					// фаза phase=4
-		case 5: afterMix(g); break;				// фаза phase=5
-		case 6: result(g); break;				// фаза phase=6
+		case 1: starts(g); break;		// phase=1
+		case 2: beforeMix(g); break;		// phase=2
+		case 3: moveBall(g); break;		// phase=3
+		case 4: mix(g); break;			// phase=4
+		case 5: afterMix(g); break;		// phase=5
+		case 6: result(g); break;		// phase=6
 		}
 	
 	}
